@@ -50,7 +50,7 @@ oauth = OAuth1Session(
     client_secret=consumer_secret,
     resource_owner_key=resource_owner_key,
     resource_owner_secret=resource_owner_secret,
-    verifier=verifier,
+    verifier=str(verifier),
 )
 oauth_tokens = oauth.fetch_access_token(access_token_url)
 
