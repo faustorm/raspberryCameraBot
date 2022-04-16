@@ -16,11 +16,21 @@ sleep(2)
 
 CONSUMER_KEY = 'b75xPpzpsdnjf08Yo340mHvbF';
 CONSUMER_SECRET = 'N0zOqUzGePVHEu3pJ1OMs1XqWVdhG2bn0lzaaYzpziNQmZXKZb';
+bearer_token = 'AAAAAAAAAAAAAAAAAAAAAOpJbgEAAAAArJ4YCyFm7yMhimY2XMb6AroqleE%3DNVLQvgui8T1x0ErXwaWmPxsBoRvr4Ly5TQvIbVnFXRcckIrdub';
 consumer_key = CONSUMER_KEY
 consumer_secret = CONSUMER_SECRET
 
 # Be sure to add replace the text of the with the text you wish to Tweet. You can also add parameters to post polls, quote Tweets, Tweet with reply settings, and Tweet to Super Followers in addition to other features.
 payload = {"text": "Hello world!"}
+
+def bearer_oauth(r):
+    """
+    Method required by bearer token authentication.
+    """
+
+    r.headers["Authorization"] = f"Bearer {bearer_token}"
+    r.headers["User-Agent"] = "v2TweetLookupPython"
+    return r
 
 # Get request token
 request_token_url = "https://api.twitter.com/oauth/request_token?oauth_callback=oob&x_auth_access_type=write"
