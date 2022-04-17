@@ -1,0 +1,12 @@
+{
+    "name": "faustorm/raspberry-camera-bot",
+    "authors": [
+        {
+            "name": "Fausto Madrid",
+            "email": "faustoruizmadrid@gmail.com"
+        }
+    ],
+    "require": {
+        "cvuorinen/raspicam-php": "^1.0"
+    }
+}
