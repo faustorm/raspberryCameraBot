@@ -56,4 +56,4 @@ def twitter_get_user_data(access_token_list):
     
     return user_data.json()
 
-get_resource_token()
+print(get_resource_token())
