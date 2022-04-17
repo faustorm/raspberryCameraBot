@@ -7,19 +7,19 @@ require 'vendor/autoload.php';
 use Cvuorinen\Raspicam\Raspistill;
 
 /*
-cuenta antigua*/
+cuenta antigua
 $settings = array(
     'oauth_access_token' => "2929730890-FzwuPzlQ628VZlehaJXPZexEQEKyOvjG26OEgvG",
     'oauth_access_token_secret' => "7CMdLTuRMwOJ8EFLUkK17c0YP1gGCX26HtyQMcLdU6mmZ",
     'consumer_key' => "ExYUACK1zPYudi1cEoHmk1Mwz",
     'consumer_secret' => "IGJ6tHRVkLZd8vP0xhEyynV5hHp6HVRc9aw66S4XYBmgcRjNQh"
-);/**/
-/*$settings = array(
-    'oauth_access_token' => "WEVTSF9yMjVSN3E1dUFzczRvd1o6MTpjaQ",
-    'oauth_access_token_secret' => "Xca2MTzVlu0eelGKfmicaw2r8R4U17MDBlyYuZH_kOqnkohAVy",
+);*/
+$settings = array(
+    'oauth_access_token' => "919255384984088576-tkdCBJB5LwREoVvfAT3ddVeYUY9uCal",
+    'oauth_access_token_secret' => "zyBp5B8ZK4IeKIDW208IqxvHaXTZ5x1605hTt4g3PuPba",
     'consumer_key' => "b75xPpzpsdnjf08Yo340mHvbF",
     'consumer_secret' => "N0zOqUzGePVHEu3pJ1OMs1XqWVdhG2bn0lzaaYzpziNQmZXKZb"
-);*/
+);
 
 passthru("raspistill -o pics/test.jpg");
 
