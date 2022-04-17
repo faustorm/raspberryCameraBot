@@ -28,7 +28,7 @@ def bearer_oauth(r):
     Method required by bearer token authentication.
     """
 
-    r.headers["Authorization"] = f"Bearer {bearer_token}"
+    r.headers["Authorization"] = "Bearer {bearer_token}"
     r.headers["User-Agent"] = "v2TweetLookupPython"
     return r
 
