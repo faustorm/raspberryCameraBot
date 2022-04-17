@@ -83,6 +83,6 @@ echo $twitter->buildOauth($url, $requestMethod)
 ?>
 <html>
 <body>
-<img src="pics/picture.jpg">
+<img src="pics/test.jpg">
 </body>
 </html>
