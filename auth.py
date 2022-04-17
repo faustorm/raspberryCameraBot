@@ -10,7 +10,7 @@ resource_owner_secret = ''
 
 def get_resource_token():
     #create an object of OAuth1Session    
-    request_token = OAuth1Session(client_key=consumer_key,                     client_secret=consumer_secret)
+    request_token = OAuth1Session(client_key=consumer_key, client_secret=consumer_secret)
     # twitter endpoint to get request token
     url = 'https://api.twitter.com/oauth/request_token'
     # get request_token_key, request_token_secret and other details
