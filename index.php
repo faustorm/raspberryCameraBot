@@ -29,7 +29,7 @@ $camera->timeout(1)
 	->quality(30);
 
 
-$path = '/var/www/html/rb-camera-bot/pics/picture.jpg';
+$path = '/var/www/html/rb-camera-bot/pics/picture2.jpg';
 $camera->takePicture($path);
 
 
