@@ -1,59 +1,97 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+# Copyright 2007-2018 The Python-Twitter Developers
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+# http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""Utility to get your access tokens."""
+
+from __future__ import print_function
+
 from requests_oauthlib import OAuth1Session
+import webbrowser
 
-CONSUMER_KEY = 'b75xPpzpsdnjf08Yo340mHvbF';
-CONSUMER_SECRET = 'N0zOqUzGePVHEu3pJ1OMs1XqWVdhG2bn0lzaaYzpziNQmZXKZb';
+import sys
 
-consumer_key = CONSUMER_KEY
-consumer_secret = CONSUMER_SECRET
-resource_owner_key = ''
-resource_owner_secret = ''
+if sys.version_info.major < 3:
+    input = raw_input
 
-def get_resource_token():
-    #create an object of OAuth1Session    
-    request_token = OAuth1Session(client_key=consumer_key, client_secret=consumer_secret)
-    # twitter endpoint to get request token
-    url = 'https://api.twitter.com/oauth/request_token'
-    # get request_token_key, request_token_secret and other details
-    data = request_token.get(url)
-    # split the string to get relevant data 
-    data_token = str.split(data.text, '&')
-    ro_key = str.split(data_token[0], '=')
-    ro_secret = str.split(data_token[1], '=')
-    resource_owner_key = ro_key[1]
-    resource_owner_secret = ro_secret[1]
-    resource = [resource_owner_key, resource_owner_secret]
-    return resource
+REQUEST_TOKEN_URL = 'https://api.twitter.com/oauth/request_token'
+ACCESS_TOKEN_URL = 'https://api.twitter.com/oauth/access_token'
+AUTHORIZATION_URL = 'https://api.twitter.com/oauth/authorize'
+SIGNIN_URL = 'https://api.twitter.com/oauth/authenticate'
 
-def twitter_get_access_token(verifier, ro_key, ro_secret):
-    oauth_token = OAuth1Session(client_key=consumer_key,
-                                client_secret=consumer_secret,
-                                resource_owner_key=ro_key,
-                                resource_owner_secret=ro_secret)
-    url = 'https://api.twitter.com/oauth/access_token'
-    data = {"oauth_verifier": verifier}
-   
-    access_token_data = oauth_token.post(url, data=data)
-    print(access_token_data.text)
-    access_token_list = str.split(access_token_data.text, '&')
-    return access_token_list
 
-def twitter_get_user_data(access_token_list):
-    access_token_key = str.split(access_token_list[0], '=')
-    access_token_secret = str.split(access_token_list[1], '=')
-    access_token_name = str.split(access_token_list[3], '=')
-    access_token_id = str.split(access_token_list[2], '=')
-    key = access_token_key[1]
-    secret = access_token_secret[1]
-    name = access_token_name[1]
-    id = access_token_id[1]
-    oauth_user = OAuth1Session(client_key=consumer_key,
-                               client_secret=consumer_secret,
-                               resource_owner_key=key,
-                               resource_owner_secret=secret)
-    url_user = 'https://api.twitter.com/1.1/account/verify_credentials.json'
-    params = {"include_email": 'true'}
-    user_data = oauth_user.get(url_user, params=params)
+def get_access_token(consumer_key, consumer_secret):
+    """Get an access token for a given consumer key and secret.
+    Args:
+        consumer_key (str):
+            Your application consumer key.
+        consumer_secret (str):
+            Your application consumer secret.
+    Returns:
+        (None) Prints to command line.
+    """
+    oauth_client = OAuth1Session(consumer_key, client_secret=consumer_secret, callback_uri='oob')
+
+    print('\nRequesting temp token from Twitter...\n')
+
+    resp = oauth_client.fetch_request_token(REQUEST_TOKEN_URL)
+
+    url = oauth_client.authorization_url(AUTHORIZATION_URL)
+
+    print('I will try to start a browser to visit the following Twitter page '
+          'if a browser will not start, copy the URL to your browser '
+          'and retrieve the pincode to be used '
+          'in the next step to obtaining an Authentication Token: \n'
+          '\n\t{0}'.format(url))
+
+    webbrowser.open(url)
+    pincode = input('\nEnter your pincode? ')
+
+    print('\nGenerating and signing request for an access token...\n')
+
+    oauth_client = OAuth1Session(consumer_key, client_secret=consumer_secret,
+                                 resource_owner_key=resp.get('oauth_token'),
+                                 resource_owner_secret=resp.get('oauth_token_secret'),
+                                 verifier=pincode)
+    try:
+        resp = oauth_client.fetch_access_token(ACCESS_TOKEN_URL)
+    except ValueError as e:
+        raise 'Invalid response from Twitter requesting temp token: {0}'.format(e)
+
+    print('''Your tokens/keys are as follows:
+        consumer_key         = {ck}
+        consumer_secret      = {cs}
+        access_token_key     = {atk}
+        access_token_secret  = {ats}'''.format(
+            ck=consumer_key,
+            cs=consumer_secret,
+            atk=resp.get('oauth_token'),
+            ats=resp.get('oauth_token_secret')))
+
+
+def main():
+    """Run script to get access token and secret for given app."""
     
-    return user_data.json()
 
-print(get_resource_token())
+    CONSUMER_KEY = 'b75xPpzpsdnjf08Yo340mHvbF';
+    CONSUMER_SECRET = 'N0zOqUzGePVHEu3pJ1OMs1XqWVdhG2bn0lzaaYzpziNQmZXKZb';
+
+    consumer_key = CONSUMER_KEY
+    consumer_secret = CONSUMER_SECRET
+    get_access_token(consumer_key, consumer_secret)
+
+
+if __name__ == "__main__":
+    main()
